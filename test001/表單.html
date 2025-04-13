@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>登入系統</title>
+  <style>
+    body {
+      font-family: 'Segoe UI', 'Noto Sans TC', sans-serif;
+      background: linear-gradient(rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.08)), 
+                  url('images/background.png') no-repeat center center fixed; /* 增加漸變遮罩 */
+      background-size: cover; /* 讓圖片覆蓋整個頁面 */
+      display: flex;
+      justify-content: center; /* 水平置中 */
+      align-items: center; /* 垂直置中 */
+      min-height: 100vh;
+      margin: 0;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.3); /* 半透明白色背景 */
+      backdrop-filter: blur(30px); /* 磨砂玻璃效果 */
+      padding: 40px;
+      border-radius: 16px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2); /* 增加陰影效果 */
+      max-width: 440px;
+      width: 100%;
+    }
+
+    h2 {
+      text-align: center;
+      color: #2b1f19; /* 深棕 */
+      font-size: 24px;
+      margin-bottom: 28px;
+    }
+
+    .form-group {
+      margin-bottom: 18px;
+      position: relative;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 6px;
+      color: #2b1f19; /* 中棕 */
+      font-weight: 500;
+      font-size: 15px;
+    }
+
+    input[type="text"],
+    input[type="password"],
+    input[type="email"] {
+      width: 100%;
+      padding: 12px 14px;
+      border: 1px solid #C8B6A6; /* 冷色棕 */
+      border-radius: 8px;
+      font-size: 15px;
+      background-color: rgba(250, 245, 239, 0.8); /* 半透明背景 */
+      box-sizing: border-box;
+    }
+
+    input:focus {
+      outline: none;
+      border-color: #2b1f19; /* 深棕 */
+    }
+
+    .toggle-password {
+      position: absolute;
+      top: 36px;
+      right: 14px;
+      cursor: pointer;
+      font-size: 14px;
+      color: #A68A7A; /* 冷色棕 */
+    }
+
+    .remember-box {
+      display: flex;
+      align-items: center;
+      margin-bottom: 16px;
+    }
+
+    .remember-box input {
+      margin-right: 8px;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      background-color: #2b1f19; /* 深棕 */
+      color: white;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 16px;
+      font-weight: 500;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    button:hover {
+      background-color: #3b2a22; /* 更深的棕色 */
+    }
+
+    button:active {
+      transform: scale(0.98); /* 按下時縮小 */
+      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+    }
+
+    .social-buttons {
+      margin-top: 20px;
+    }
+
+    .social-buttons button {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 100%;
+      padding: 10px;
+      margin-bottom: 10px;
+      border: none;
+      border-radius: 8px;
+      font-size: 14px;
+      font-weight: 500;
+      cursor: pointer;
+      color: white;
+    }
+
+    .social-buttons button.google {
+      background-color: #B85750; /* 紅棕 */
+    }
+
+    .social-buttons button.facebook {
+      background-color: #5A6E8B; /* 冷色棕藍 */
+    }
+
+    .social-buttons button.line {
+      background-color: #6B8B5E; /* 綠色棕 */
+    }
+
+    .social-buttons button:hover {
+      opacity: 0.9;
+    }
+
+    .footer-links {
+      margin-top: 20px;
+      text-align: center;
+      font-size: 14px;
+    }
+
+    .footer-links a {
+      color: #3c2f26; /* 更深的暖棕色 */
+      font-size: 16px; /* 增加字體大小 */
+      font-weight: bold; /* 加粗文字 */
+      text-decoration: none;
+      margin: 0 8px;
+      transition: color 0.3s ease;
+    }
+
+    .footer-links a:hover {
+      color: #D2691E; /* 橙棕色 */
+      text-decoration: underline;
+    }
+
+    #response-message {
+      margin-top: 24px;
+      padding: 12px;
+      background-color: #E9F6F2; /* 淡綠棕 */
+      border-left: 4px solid #6BBF8E; /* 綠色棕 */
+      color: #2d7a41;
+      font-size: 14px;
+      text-align: center;
+      border-radius: 6px;
+      display: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <h2>登入系統</h2>
+      <form id="login-form">
+        <div class="form-group">
+          <label for="username">使用者名稱</label>
+          <input type="text" id="username" name="username" placeholder="請輸入使用者名稱" required>
+        </div>
+
+        <div class="form-group">
+          <label for="password">密碼</label>
+          <input type="password" id="password" name="password" placeholder="請輸入密碼" required minlength="6">
+          <span class="toggle-password" onclick="togglePassword()">顯示</span>
+        </div>
+
+        <div class="form-group">
+          <label for="captcha">驗證碼（請輸入 000000）</label>
+          <input type="text" id="captcha" name="captcha" placeholder="請輸入驗證碼" required pattern="1234">
+        </div>
+
+        <div class="remember-box">
+          <input type="checkbox" id="remember" name="remember">
+          <label for="remember">記住我</label>
+        </div>
+
+        <button type="submit">登入</button>
+      </form>
+
+      <div class="social-buttons">
+        <button class="google">使用 Google 登入</button>
+        <button class="facebook">使用 Facebook 登入</button>
+        <button class="line">使用 Line 登入</button>
+      </div>
+
+      <div class="footer-links">
+        <a href="#" class="footer-link">註冊帳號</a> | 
+        <a href="#" class="footer-link">忘記密碼？</a>
+      </div>
+
+      <div id="response-message">登入成功！</div>
+    </div>
+  </div>
+</body>
+</html>
